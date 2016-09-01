@@ -154,16 +154,19 @@ Licensed under the MIT License ~ http://threedubmedia.googlecode.com/files/MIT-L
             prevPageY = e.pageY;
         }
         
+        var lastEvent = null;
+
         function onDrag(e) {
+            lastEvent = e;
             var frameRate = plot.getOptions().pan.frameRate;
             if (panTimeout || !frameRate)
                 return;
 
             panTimeout = setTimeout(function () {
-                plot.pan({ left: prevPageX - e.pageX,
-                           top: prevPageY - e.pageY });
-                prevPageX = e.pageX;
-                prevPageY = e.pageY;
+                plot.pan({ left: prevPageX - lastEvent.pageX,
+                           top: prevPageY - lastEvent.pageY });
+                prevPageX = lastEvent.pageX;
+                prevPageY = lastEvent.pageY;
                                                     
                 panTimeout = null;
             }, 1 / frameRate * 1000);
