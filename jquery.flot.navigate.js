@@ -271,7 +271,7 @@ Licensed under the MIT License ~ http://threedubmedia.googlecode.com/files/MIT-L
                 opts.max = max;
             });
             
-            plot.setupGrid();
+            plot.setupGrid({center: args.center});
             plot.draw();
             
             if (!args.preventEvent)

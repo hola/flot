@@ -1566,12 +1566,14 @@ Licensed under the MIT license.
             plotOffset.bottom = Math.ceil(Math.max(margins.bottom, plotOffset.bottom));
         }
 
-        function setupGrid() {
+        function setupGrid(opts) {
             var i, axes = allAxes(), showGrid = options.grid.show;
+            var oldOffset = {};
 
             // Initialize the plot's offset from the edge of the canvas
 
             for (var a in plotOffset) {
+                oldOffset[a] = plotOffset[a];
                 var margin = options.grid.margin || 0;
                 plotOffset[a] = typeof margin == "number" ? margin : margin[a] || 0;
             }
@@ -1624,6 +1626,16 @@ Licensed under the MIT license.
                 $.each(allocatedAxes, function (_, axis) {
                     allocateAxisBoxSecondPhase(axis);
                 });
+            }
+
+            // we want to keep same position under the cursor in case of zoom
+            if (opts && opts.center) {
+                var deltaLeft = plotOffset.left - oldOffset.left;
+                var deltaRight = plotOffset.right - oldOffset.right;
+                var xaxis = axes[0];
+                var step = (xaxis.max - xaxis.min) / plotWidth;
+                xaxis.min += step * deltaLeft;
+                xaxis.max -= step * deltaRight;
             }
 
             plotWidth = surface.width - plotOffset.left - plotOffset.right;
